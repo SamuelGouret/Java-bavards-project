@@ -1,0 +1,35 @@
+package graph;
+
+import java.util.EventObject;
+
+public class PapotageEvent extends EventObject {
+
+	private Bavard auteur;
+	private String corps, sujet;
+	public PapotageEvent(Object source,String sujet, String corps) {
+		super(source);
+		auteur = (Bavard)source;
+		this.sujet = sujet;
+		this.corps = corps;
+	}
+	public Bavard getAuteur() {
+		return this.auteur;
+	}
+	public void setAuteur(Bavard b) {
+		this.auteur = b;
+	}
+	public String getCorps() {
+		return this.corps;
+	}
+	public void setCorps(String corpse) {
+		this.corps = corpse;
+	}
+	public String getSujet() {
+		return this.sujet;
+	}
+	public void setSujet(String sj) {
+		this.sujet = sj;
+	}
+	
+
+}
