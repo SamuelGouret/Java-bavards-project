@@ -1,0 +1,63 @@
+package graph;
+
+import java.util.ArrayList;
+
+import javax.swing.JFrame;
+
+
+
+public class Bavard implements PapotageListener{
+	private Concierge c;
+	public message fenetreDeMessage;
+	private boolean isConnected = true;
+	ArrayList <PapotageListener> listeners= new ArrayList <PapotageListener>();
+	public String name = "patate";
+
+	public Bavard(String name,Concierge c){
+		this.c = c;
+		this.name = name;
+		fenetreDeMessage = new message(this,c);
+		System.out.println("Le bavard, "+this.name+" a été créé.");
+	}
+	
+	
+	public void afficherMessage(PapotageEvent e) {
+		System.out.println("Sujet : "+e.getSujet()+".\n Corps : "+e.getCorps()+".");
+	}
+	
+	public void generatePapotageEvent(String msg, String psd){
+		PapotageEvent pe = new PapotageEvent(this, "msg", msg);
+		System.out.println("on passe par generate papotage evnt voilaaaaaa");
+		c.actionPerformed(pe);
+		}
+	
+	
+	public String actionPerformed(PapotageEvent pe) {
+		System.out.println("voilaaaaaa"+this.name);
+		String a = fenetreDeMessage.chat.getText();
+		fenetreDeMessage.chat.setText(a +"\n"+pe.getAuteur().name+" : "+pe.getCorps());
+		fenetreDeMessage.refresh();
+		return("");
+	}
+	
+	public void addPapotageListener(PapotageListener pl){
+		listeners.add(pl);
+	}
+	
+	public void removePapotageListener(PapotageListener pl){
+		listeners.remove(pl);
+	}
+	public void setConnected() {
+		boolean c = this.isConnected();
+		this.isConnected = !c;
+	}
+	public boolean isConnected() {
+		return this.isConnected;
+	}
+
+	public static void main(String[] args) {
+		Concierge c= new Concierge();    
+		connect co = new connect(c);
+		co.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+	}
+}
