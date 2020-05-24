@@ -1,0 +1,90 @@
+package graph;
+
+import java.util.ArrayList;
+
+public class Concierge implements PapotageListener{
+	public ArrayList<Bavard> clients = new ArrayList <Bavard>();
+
+	public Bavard getBavard(String psd) {
+		for(Bavard e:clients) {
+			if(e.name.equals(psd))
+				return e;
+		}
+		return getBavard("admin");
+	}
+	public int checkBavard(String s){
+		
+		int available = 0;
+		for (Bavard e:clients) {
+			if(e.name.equals(s))
+				available = 1;
+				System.out.println(e.isConnected());
+				if(e.isConnected()==false) {
+					available = 2;
+					System.out.println(available);
+					return available;
+				}
+				else {
+					System.out.println(available);
+					return available;
+				}
+				
+		}
+		System.out.println(available);
+		return available;
+	}
+	
+	public void addBavard(Bavard b){
+
+		boolean available = true;
+		for (Bavard e:clients) {
+			if(e.name.equals(b.name))
+				available = false;
+		}
+		if(available) {
+			this.clients.add(b);
+			System.out.println("Le bavard, "+ b.name +" est connecté");
+		}
+		else
+			System.out.println("Veuillez saisir un autre nom d'utilisateur.");
+	}
+
+	public String actionPerformed(PapotageEvent pe ) {
+		System.out.println(pe.getCorps());
+		for(Bavard e:this.clients) {
+			e.actionPerformed(pe);
+		}
+		return(pe.getCorps());
+	}
+
+	
+	public Bavard createBavard(String pseudo,Concierge c){
+		boolean check = false;
+		for(Bavard e:clients) {
+			if(e.name.equals(pseudo)) {
+				check = true;
+			}
+		}
+		if(check == false) {
+			Bavard b = new Bavard(pseudo,c);
+			b.addPapotageListener(this);
+			this.addBavard(b);
+			return b;
+		}
+		else {
+			return null;
+		}
+	}
+	public void displayClient() {
+		System.out.println("");
+		for(Bavard e:clients) {
+			System.out.println(e.name);
+		}
+	}
+	
+	public void addingListener(Bavard b, Bavard d) {
+		b.addPapotageListener(d);
+	}
+	
+	}
+
