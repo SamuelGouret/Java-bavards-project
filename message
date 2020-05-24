@@ -1,0 +1,137 @@
+package graph;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+public class message extends JFrame implements ActionListener{
+	private String texte[]= {};
+	private Bavard current;
+	private JPanel panel = new JPanel();
+	private JPanel panel2 = new JPanel();
+	private JPanel panela = new JPanel();
+	public JTextField mess = new JTextField(23);
+	private ArrayList<String> utilisateurs = new ArrayList <String>();
+	private JList<String> users = new JList<String>();
+	private JScrollPane sp = new JScrollPane(users, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+	public JTextArea chat = new JTextArea(16,20);
+	private JScrollPane sp2 = new JScrollPane(chat, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+	private JButton envoyer = new JButton("Envoyer");
+	private JLabel label = new JLabel("Bienvenue");
+	private JButton deco = new JButton("Deconnexion");
+	private Concierge elconcierge;
+	
+	
+	public message(Bavard b,Concierge c){
+		current = b;
+		
+		elconcierge = c;
+		DefaultListModel<String> model = new DefaultListModel<String>();
+		for(Bavard e:elconcierge.clients) {
+			    model.addElement(e.name);
+			}
+		users.setModel(model);
+		System.out.println(users);
+		this.setTitle("messagerie");
+	    this.setSize(500, 400);
+	    this.setResizable(false);
+	    this.setLocationRelativeTo(null);
+	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    envoyer.addActionListener(this);
+	    deco.addActionListener(this);
+
+	    panela.setLayout(new GridBagLayout());
+	    panel.setLayout(new GridBagLayout());
+	    GridBagConstraints orga = new GridBagConstraints();
+	    panel2.setLayout(new BorderLayout());
+	    
+	    label.setText("              " +b.name);
+	    
+	    orga.weightx = 0;
+	    orga.weighty = 1;
+	    orga.fill = GridBagConstraints.HORIZONTAL;
+	    
+	    orga.insets = new Insets(5, 5, 5, 5);
+	    
+	    orga.gridx = 0;
+	    orga.gridy = 0;
+		panel.add(sp2, orga);
+		
+		orga.gridx = 0;
+		orga.gridy = 5;
+	    panel.add(label, orga);
+	    
+	    
+		orga.gridx = 0;
+		orga.gridwidth = 4;
+		orga.gridy = 3;
+	    panel.add(mess, orga);
+	    
+	    orga.gridx = 0;
+		orga.gridwidth = 4;
+		orga.gridy = 4;
+		panel.add(envoyer, orga);
+		
+		orga.gridx = 0;
+		orga.gridy = 0;
+	    panela.add(sp, orga);
+	    
+		orga.gridx = 0;
+		orga.gridy = 1;
+	    panela.add(deco, orga);
+		
+		
+/*		users.setPreferredSize(new Dimension(500, 500));
+		users.setBackground(SystemColor.controlHighlight);
+	    users.setLayoutOrientation(JList.VERTICAL);*/
+	    chat.setEditable(false);
+		
+	    panel2.add(panela, BorderLayout.WEST);
+	    panel2.add(panel, BorderLayout.EAST);
+	    
+	    this.setContentPane(panel2);
+	    this.setVisible(true);
+	    
+	}
+		public void refresh() {
+			chat.repaint();
+			DefaultListModel<String> model = new DefaultListModel<String>();
+			for(Bavard e:elconcierge.clients) {
+				    model.addElement(e.name);
+				}
+			users.setModel(model);
+			panel2.updateUI();
+			System.out.println("page de message du bavard "+current.name+"");
+		}
+	    public void actionPerformed(ActionEvent e) {
+			Object  source=e.getSource();
+			if (source.equals(envoyer)) {  
+				current.generatePapotageEvent(mess.getText(), current.name);
+				System.out.println("actionperformed");
+			}
+			else if(source.equals(deco)) {
+				current.setConnected();
+				System.out.println(current.name +" is currently "+ current.isConnected());
+	            message.this.dispose();
+			}
+				
+	}
+}
