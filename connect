@@ -1,0 +1,153 @@
+package graph;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.GridBagLayout;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollBar;
+import javax.swing.JSlider;
+import javax.swing.WindowConstants;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.JTextField;
+
+public class connect extends JFrame implements ActionListener{
+		private JPanel panel = new JPanel();
+		private JPanel panel2 = new JPanel();
+		private JButton creation = new JButton("Créer un compte");
+		private JButton connexion = new JButton("Connexion");
+		private JLabel label = new JLabel("Bienvenue");
+		private JLabel label2 = new JLabel("");
+		private Font font = new Font("Arial",Font.BOLD,25);
+		private JLabel logs = new JLabel("Votre Pseudo :");
+		private JLabel mdp = new JLabel("Votre mot de passe :");
+		private JTextField pseudo = new JTextField(5);
+		private JPasswordField password = new JPasswordField(5);
+		public Concierge concierge = new Concierge();
+		
+		public connect(Concierge c){
+			concierge = c;
+		    this.setTitle("Connection");
+		    this.setSize(500, 215);
+		    this.setResizable(false);
+		    this.setLocationRelativeTo(null);
+		    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		    creation.addActionListener(this);
+		    connexion.addActionListener(this);
+		    label.setFont(font);
+		    
+		    panel.setLayout(new GridBagLayout());
+		    GridBagConstraints orga = new GridBagConstraints();
+		    panel2.setLayout(new BorderLayout());
+		    orga.weightx = 1;
+		    orga.weighty = 5;
+		    orga.fill = GridBagConstraints.HORIZONTAL;
+		    orga.insets = new Insets(5, 5, 5, 5);
+		    
+		    orga.gridx = 0;
+		    orga.gridwidth = 2;
+		    orga.gridy = 4;
+			panel.add(creation, orga);
+			
+			orga.gridx = 0;
+			orga.gridwidth = 2;
+			orga.gridy = 5;
+		    panel.add(connexion, orga);
+		    
+		    orga.gridx = 0;
+		    orga.gridwidth = 3;
+		    orga.gridy = 0;
+		    panel.add(label, orga);
+		    
+		    orga.gridx = 1;
+		    orga.gridwidth = 3;
+		    orga.gridy = 1;
+		    panel.add(label2, orga);
+		    
+		    orga.gridx = 0;
+		    orga.gridwidth = 1;
+		    orga.gridy = 2;
+		    panel.add(logs, orga);
+		    
+		    orga.gridx = 1;
+		    orga.gridwidth = 1;
+		    orga.gridy = 2;
+		    panel.add(pseudo, orga);
+		    
+		    orga.gridx = 0;
+		    orga.gridwidth = 1;
+		    orga.gridy = 3;
+			panel.add(mdp, orga);
+			
+			orga.gridx = 1;
+			orga.gridwidth = 1;
+			orga.gridy = 3;
+		    panel.add(password, orga);
+		    
+		    panel2.add(panel, BorderLayout.NORTH);
+		    
+		    this.setContentPane(panel2);
+		    this.setVisible(true);
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			Object  source=e.getSource();
+			if (source==creation) {    
+	            create cre=new create();            
+	            cre.setVisible(true);
+	            connect.this.dispose();  
+			}
+			else if (source==connexion) {
+				System.out.println("connexion en cours");
+				
+				if(pseudo.getText().equals("")){
+					label2.setForeground(new Color(255,0,0));
+					this.setSize(500, 235);
+					label2.setText(" Veuillez entrer un pseudo");
+					System.out.println("pas de pseudo saisie");
+					
+				}				
+				else if(concierge.checkBavard(pseudo.getText())==0){
+					Bavard b= new Bavard(pseudo.getText(),concierge);
+					concierge.addBavard(b);
+					for (Bavard j:concierge.clients) {
+						System.out.println(j.name);
+						}
+				}
+				else if(concierge.checkBavard(pseudo.getText())==2){
+					System.out.println(concierge.clients);
+					panel.updateUI();
+					panel2.updateUI();
+							for (Bavard z:concierge.clients) {
+								if(z.name.equals(pseudo.getText())) {
+									z.fenetreDeMessage.setVisible(true);
+									}
+							}
+				}
+				else if(concierge.checkBavard(pseudo.getText())==1){
+					panel.updateUI();
+					panel2.updateUI();
+					System.out.println(concierge.clients);
+					label2.setForeground(new Color(255,0,0));
+					this.setSize(500, 235);
+					label2.setText("Pseudo déja utilisé");
+					System.out.println("Pseudo deja utilisé");
+				}
+				else {
+					label2.setForeground(new Color(255,0,0));
+					this.setSize(500, 235);
+					label2.setText("Pseudo déja utilisé");
+					System.out.println("Pseudo deja utilisé");
+				}
+				
+			}
+		}	
+}
